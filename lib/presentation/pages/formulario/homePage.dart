@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/presentation/pages/formulario/page2.dart';
 import 'package:myapp/theme/colors.dart';
 import 'package:myapp/theme/text_styles.dart';
 
@@ -13,7 +14,6 @@ class HomePage extends StatelessWidget {
         actions: const [
           Padding(
             padding: EdgeInsets.only(right: 16.0),
-            child: Icon(Icons.search, color: Colors.white),
           ),
         ],
       ),
@@ -57,7 +57,12 @@ class HomePage extends StatelessWidget {
                   _buildCategoryCard(
                     icon: Icons.description_outlined,
                     title: 'Formulário',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Page2()),
+                      );
+                    },
                   ),
                   _buildCategoryCard(
                     icon: Icons.chat_outlined,
