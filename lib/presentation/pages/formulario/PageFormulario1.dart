@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/presentation/pages/formulario/PageFormulario2.dart';
 import 'package:myapp/theme/colors.dart';
 
 class PageFormulario1 extends StatefulWidget {
@@ -15,15 +16,14 @@ class _PageFormulario1State extends State<PageFormulario1> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
+   return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Cuide-se Mais',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: AppColors.primary,
-        centerTitle: true,
+        title: const Text('Cuide-se Mais'),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 16.0),
+          ),
+        ],
       ),
 
       body: Padding(
@@ -126,13 +126,22 @@ class _PageFormulario1State extends State<PageFormulario1> {
                           content: Text('Campos validados com sucesso!'),
                         ),
                       );
-                      // Aqui depois você pode navegar para a parte 2
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PageFormulario2(),
+                        ),
+                      );
                     }
                   },
-                  child: const Text(
-                    'Próximo',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  child: Text(
+                  'Próximo',
+                  style: TextStyle(
+                    color: AppColors.background, // supondo que você tenha AppColors.white
+                    fontWeight: FontWeight.bold, // opcional
+                    fontSize: 16, // opcional
                   ),
+                ),
                 ),
               ),
             ],
