@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/presentation/pages/formulario/homePage.dart';
+import 'package:myapp/presentation/login/loginPage.dart';
 import 'package:myapp/theme/colors.dart';
 import 'package:myapp/theme/text_styles.dart';
 
@@ -20,7 +20,7 @@ class CuideSeMaisApp extends StatelessWidget {
           iconTheme: const IconThemeData(color: Colors.white),
         ),
       ),
-      home: const HomePage(),
+      home: const LoginPage(),
     );
   }
 }

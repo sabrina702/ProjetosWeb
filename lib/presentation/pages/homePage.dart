@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/presentation/pages/formulario/page2.dart';
+import 'package:myapp/presentation/pages/formulario/homePageFormulario.dart';
+import 'package:myapp/presentation/pages/quizz/quiz_home_page.dart';
 import 'package:myapp/theme/colors.dart';
 import 'package:myapp/theme/text_styles.dart';
 
@@ -37,7 +38,7 @@ class HomePage extends StatelessWidget {
               child: const TextField(
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.search, color: AppColors.icon),
-                  hintText: 'Search',
+                  hintText: 'Pesquisa',
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(vertical: 14),
                 ),
@@ -67,7 +68,12 @@ class HomePage extends StatelessWidget {
                   _buildCategoryCard(
                     icon: Icons.chat_outlined,
                     title: 'Quiz',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const QuizHomePage()),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -87,7 +93,7 @@ class HomePage extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
-            label: 'Profile',
+            label: 'Perfil',
           ),
         ],
       ),
