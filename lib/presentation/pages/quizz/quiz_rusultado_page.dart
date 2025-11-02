@@ -22,132 +22,105 @@ class QuizResultPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Cuide-se Mais'),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 16.0),
+          ),
+        ],
+      ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              color: AppColors.primary,
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.favorite,
-                    color: Colors.white,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Cuide-se Mais',
-                    style: AppTextStyles.title.copyWith(color: Colors.white),
-                  ),
-                ],
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              const SizedBox(height: 24),
+              const Icon(
+                Icons.emoji_events,
+                size: 80,
+                color: AppColors.primary,
               ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.emoji_events,
-                      size: 80,
-                      color: AppColors.primary,
-                    ),
-                    const SizedBox(height: 24),
-                    Text(
-                      'Quiz Concluído!',
-                      style: AppTextStyles.title,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 32),
-                    Text(
-                      '$score/10',
-                      style: AppTextStyles.score,
-                      textAlign: TextAlign.center,
-                    ),
-                    Text(
-                      'Respostas corretas',
-                      style: AppTextStyles.subtitle,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 24),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        '${(score / 10 * 100).toStringAsFixed(0)}%\n${_getMessage}',
-                        style: AppTextStyles.subtitle.copyWith(color: Colors.white),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    const SizedBox(height: 48),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) => const QuizHomePage(),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.buttonBackground,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: Text(
-                          'Tentar Novamente',
-                          style: AppTextStyles.button,
-                        ),
-                      ),
-                    ),
-                  ],
+              const SizedBox(height: 24),
+              Text(
+                'Quiz Concluído!',
+                style: AppTextStyles.title,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 32),
+              Text(
+                '$score/10',
+                style: AppTextStyles.score,
+                textAlign: TextAlign.center,
+              ),
+              Text(
+                'Respostas corretas',
+                style: AppTextStyles.subtitle,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  '${(score / 10 * 100).toStringAsFixed(0)}%\n${_getMessage}',
+                  style: AppTextStyles.subtitle.copyWith(color: Colors.white),
+                  textAlign: TextAlign.center,
                 ),
               ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(16),
-              color: AppColors.navigationBarBackground,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        Icons.home,
-                        color: Colors.white,
+              const SizedBox(height: 30),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => const QuizHomePage(),
                       ),
-                      Text(
-                        'Home',
-                        style: AppTextStyles.body.copyWith(color: Colors.white),
-                      ),
-                    ],
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.buttonBackground,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        Icons.person_outline,
-                        color: Colors.white,
-                      ),
-                      Text(
-                        'Perfil',
-                        style: AppTextStyles.body.copyWith(color: Colors.white),
-                      ),
-                    ],
+                  child: Text(
+                    'Tentar Novamente',
+                    style: AppTextStyles.button,
                   ),
-                ],
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 24),
+            ],
+          ),
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: AppColors.primary,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white70,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            label: 'Perfil',
+          ),
+        ],
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.pushNamed(context, '/home');
+          } else if (index == 1) {
+            Navigator.pushNamed(context, '/perfil');
+          }
+        },
       ),
     );
   }

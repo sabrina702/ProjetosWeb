@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/presentation/pages/formulario/PageFormularioFinal.dart';
 import 'package:myapp/theme/colors.dart';
 
 class PageFormulario2 extends StatefulWidget {
@@ -10,9 +11,8 @@ class PageFormulario2 extends StatefulWidget {
 
 class _PageFormulario2State extends State<PageFormulario2> {
   final _formKey = GlobalKey<FormState>();
-  final ScrollController _scrollController = ScrollController(); // 🔹 controlador da rolagem
+  final ScrollController _scrollController = ScrollController();
 
-  // Respostas zeradas
   String? estresse;
   String? ansiedade;
   String? sobrecarga;
@@ -38,7 +38,7 @@ class _PageFormulario2State extends State<PageFormulario2> {
 
   @override
   void dispose() {
-    _scrollController.dispose(); // 🔹 liberar o controlador quando sair da tela
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -53,20 +53,21 @@ class _PageFormulario2State extends State<PageFormulario2> {
         centerTitle: true,
       ),
       body: SafeArea(
-        child: Scrollbar( // 🔹 adiciona a barrinha lateral de rolagem
+        child: Scrollbar(
           controller: _scrollController,
-          thumbVisibility: true, // 🔹 deixa visível enquanto rola
-          thickness: 6, // 🔹 define a espessura da barra
-          radius: const Radius.circular(10), // 🔹 cantos arredondados
-          interactive: true, // 🔹 permite arrastar a barra
+          thumbVisibility: true,
+          thickness: 6,
+          radius: const Radius.circular(10),
+          interactive: true,
           child: SingleChildScrollView(
-            controller: _scrollController, // 🔹 conecta o ScrollController
+            controller: _scrollController,
             padding: const EdgeInsets.all(16),
             child: Form(
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // 🧠 Saúde Mental
                   const Text(
                     '🧠 Saúde Mental e Emocional',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -83,8 +84,7 @@ class _PageFormulario2State extends State<PageFormulario2> {
                             title: Text(opcao),
                             value: opcao,
                             groupValue: estresse,
-                            onChanged: (value) =>
-                                setState(() => estresse = value),
+                            onChanged: (value) => setState(() => estresse = value),
                           ))
                       .toList(),
                   const SizedBox(height: 10),
@@ -101,13 +101,9 @@ class _PageFormulario2State extends State<PageFormulario2> {
                       hintText: 'Selecione uma opção',
                     ),
                     value: ansiedade,
-                    items: escalaLikert
-                        .map((e) =>
-                            DropdownMenuItem(value: e, child: Text(e)))
-                        .toList(),
+                    items: escalaLikert.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
                     onChanged: (value) => setState(() => ansiedade = value),
-                    validator: (value) =>
-                        value == null ? 'Selecione uma opção' : null,
+                    validator: (value) => value == null ? 'Selecione uma opção' : null,
                   ),
                   const SizedBox(height: 10),
 
@@ -123,16 +119,13 @@ class _PageFormulario2State extends State<PageFormulario2> {
                       hintText: 'Selecione uma opção',
                     ),
                     value: sobrecarga,
-                    items: escalaLikert
-                        .map((e) =>
-                            DropdownMenuItem(value: e, child: Text(e)))
-                        .toList(),
+                    items: escalaLikert.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
                     onChanged: (value) => setState(() => sobrecarga = value),
-                    validator: (value) =>
-                        value == null ? 'Selecione uma opção' : null,
+                    validator: (value) => value == null ? 'Selecione uma opção' : null,
                   ),
                   const SizedBox(height: 20),
 
+                  // 🍎 Hábitos Alimentares
                   const Text(
                     '🍎 Hábitos Alimentares',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -141,29 +134,65 @@ class _PageFormulario2State extends State<PageFormulario2> {
 
                   // Pergunta 4
                   const Text(
-                    '4. Quantas refeições completas (café, almoço, jantar) você costuma fazer por dia?',
+                    '4. Quantas refeições completas você costuma fazer por dia?',
                     style: TextStyle(fontWeight: FontWeight.w500),
                   ),
-                  const SizedBox(height: 6),
                   Column(
-                    children: [
-                      '1 refeição',
-                      '2 refeições',
-                      '3 refeições',
-                      '4 ou mais refeições'
-                    ]
+                    children: ['1 refeição','2 refeições','3 refeições','4 ou mais refeições']
                         .map((opcao) => RadioListTile(
                               title: Text(opcao),
                               value: opcao,
                               groupValue: refeicoes,
-                              onChanged: (value) =>
-                                  setState(() => refeicoes = value),
+                              onChanged: (value) => setState(() => refeicoes = value),
                             ))
                         .toList(),
                   ),
                   const SizedBox(height: 10),
 
-                  // Pergunta 7 (ultraprocessados)
+                  // Pergunta 5 - Slider
+                  const Text(
+                    '5. Com que frequência você consome frutas frescas durante o dia?',
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  Slider(
+                    value: frutas,
+                    min: 0,
+                    max: 4,
+                    divisions: 4,
+                    label: [
+                      'Nunca',
+                      '1 a 2 vezes por semana',
+                      '3 a 4 vezes por semana',
+                      '1 vez por dia',
+                      '2 ou mais vezes por dia'
+                    ][frutas.toInt()],
+                    onChanged: (value) => setState(() => frutas = value),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Pergunta 6 - Água
+                  const Text(
+                    '6. Quantos copos de água, em média, você consome por dia?',
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  Column(
+                    children: [
+                      'Menos de 4 copos (menos de 1 litro)',
+                      'De 4 a 6 copos (1 a 1,5 litro)',
+                      'De 7 a 9 copos (1,5 a 2 litros)',
+                      '10 copos ou mais (acima de 2 litros)'
+                    ]
+                        .map((opcao) => RadioListTile(
+                              title: Text(opcao),
+                              value: opcao,
+                              groupValue: agua,
+                              onChanged: (value) => setState(() => agua = value),
+                            ))
+                        .toList(),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Pergunta 7 - ultraprocessados
                   const Text(
                     '7. Com que frequência você consome alimentos ultraprocessados (refrigerantes, fast food, doces)?',
                     style: TextStyle(fontWeight: FontWeight.w500),
@@ -175,24 +204,184 @@ class _PageFormulario2State extends State<PageFormulario2> {
                       hintText: 'Selecione uma opção',
                     ),
                     value: ultraprocessados,
-                    items: [
-                      'Nunca',
-                      'Raramente',
-                      'Às vezes',
-                      'Frequentemente',
-                      'Todos os dias'
+                    items: ['Nunca','Raramente','Às vezes','Frequentemente','Todos os dias']
+                        .map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                    onChanged: (value) => setState(() => ultraprocessados = value),
+                    validator: (value) => value == null ? 'Selecione uma opção' : null,
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Pergunta 8 - suplementos
+                  const Text(
+                    '8. Você utiliza algum tipo de suplemento alimentar (vitaminas, proteínas, colágeno, etc.)?',
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  Column(
+                    children: [
+                      'Sim, uso regularmente',
+                      'Sim, mas apenas ocasionalmente',
+                      'Não uso suplementos'
                     ]
-                        .map((e) =>
-                            DropdownMenuItem(value: e, child: Text(e)))
+                        .map((opcao) => RadioListTile(
+                              title: Text(opcao),
+                              value: opcao,
+                              groupValue: suplementos,
+                              onChanged: (value) => setState(() => suplementos = value),
+                            ))
                         .toList(),
-                    onChanged: (value) =>
-                        setState(() => ultraprocessados = value),
-                    validator: (value) =>
-                        value == null ? 'Selecione uma opção' : null,
+                  ),
+                  const SizedBox(height: 20),
+
+                  // 🏃‍♀️ Atividade Física
+                  const Text(
+                    '🏃‍♀️ Atividade Física',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Pergunta 9
+                  const Text(
+                    '9. Com que frequência você pratica algum tipo de atividade física?',
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  const SizedBox(height: 6),
+                  DropdownButtonFormField<String>(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Selecione uma opção',
+                    ),
+                    value: atividadeFreq,
+                    items: ['Todos os dias','3 a 5 vezes por semana','1 a 2 vezes por semana','Raramente','Nunca']
+                        .map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                    onChanged: (value) => setState(() => atividadeFreq = value),
+                    validator: (value) => value == null ? 'Selecione uma opção' : null,
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Pergunta 10
+                  const Text(
+                    '10. Quando pratica atividade física, qual é o tempo médio de duração de cada sessão?',
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  Column(
+                    children: ['Menos de 30 minutos','De 30 a 60 minutos','De 1 a 2 horas','Mais de 2 horas']
+                        .map((opcao) => RadioListTile(
+                              title: Text(opcao),
+                              value: opcao,
+                              groupValue: duracao,
+                              onChanged: (value) => setState(() => duracao = value),
+                            ))
+                        .toList(),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Pergunta 11 - motivacoes
+                  const Text(
+                    '11. Quais são suas principais motivações para praticar atividade física?',
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  Column(
+                    children: [
+                      'Manter a saúde',
+                      'Melhorar o humor e reduzir o estresse',
+                      'Questões estéticas (melhorar aparência, emagrecer, ganhar massa)',
+                      'Lazer ou diversão',
+                      'Indicação médica',
+                      'Conviver com outras pessoas',
+                      'Outros (especificar)'
+                    ]
+                        .map((opcao) => CheckboxListTile(
+                              title: Text(opcao),
+                              value: motivacoes.contains(opcao),
+                              onChanged: (checked) {
+                                setState(() {
+                                  if (checked == true) {
+                                    motivacoes.add(opcao);
+                                  } else {
+                                    motivacoes.remove(opcao);
+                                  }
+                                });
+                              },
+                            ))
+                        .toList(),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Pergunta 12 - impeditivos
+                  const Text(
+                    '12. O que mais te impede de praticar atividade física com frequência?',
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  Column(
+                    children: [
+                      'Falta de tempo',
+                      'Falta de motivação',
+                      'Cansaço físico ou mental',
+                      'Falta de local adequado',
+                      'Questões financeiras',
+                      'Lesão ou problema de saúde',
+                      'Nada me impede'
+                    ]
+                        .map((opcao) => CheckboxListTile(
+                              title: Text(opcao),
+                              value: impeditivos.contains(opcao),
+                              onChanged: (checked) {
+                                setState(() {
+                                  if (checked == true) {
+                                    impeditivos.add(opcao);
+                                  } else {
+                                    impeditivos.remove(opcao);
+                                  }
+                                });
+                              },
+                            ))
+                        .toList(),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // 😴 Sono e Descanso
+                  const Text(
+                    '😴 Sono e Descanso',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Pergunta 13
+                  const Text(
+                    '13. Quantas horas de sono você costuma ter por noite, em média?',
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  Column(
+                    children: ['Menos de 5 horas','De 5 a 6 horas','De 7 a 8 horas','Mais de 8 horas']
+                        .map((opcao) => RadioListTile(
+                              title: Text(opcao),
+                              value: opcao,
+                              groupValue: sono,
+                              onChanged: (value) => setState(() => sono = value),
+                            ))
+                        .toList(),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Pergunta 14
+                  const Text(
+                    '14. Você costuma usar celular, computador ou assistir TV antes de dormir?',
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  const SizedBox(height: 6),
+                  DropdownButtonFormField<String>(
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Selecione uma opção',
+                    ),
+                    value: telaAntesDormir,
+                    items: escalaLikert.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+                    onChanged: (value) => setState(() => telaAntesDormir = value),
+                    validator: (value) => value == null ? 'Selecione uma opção' : null,
                   ),
                   const SizedBox(height: 30),
 
-                  // 🔹 Botão Enviar igual ao da PageFormulario1
+                  // Botão Enviar
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -201,23 +390,24 @@ class _PageFormulario2State extends State<PageFormulario2> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        padding:
-                            const EdgeInsets.symmetric(vertical: 16),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text(
-                                  'Formulário enviado com sucesso!'),
+                              content: Text('Formulário enviado com sucesso!'),
                             ),
+                          );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const PageFormularioFinal()),
                           );
                         }
                       },
                       child: const Text(
                         'Enviar',
-                        style:
-                            TextStyle(fontSize: 18, color: Colors.white),
+                        style: TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     ),
                   ),

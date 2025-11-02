@@ -160,7 +160,7 @@ class _PageFormulario1State extends State<PageFormulario1> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
-            label: 'Profile',
+            label: 'Perfil',
           ),
         ],
       ),

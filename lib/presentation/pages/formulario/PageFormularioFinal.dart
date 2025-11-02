@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/presentation/pages/quizz/quiz_page.dart';
 import 'package:myapp/theme/colors.dart';
 import 'package:myapp/theme/text_styles.dart';
 
-class QuizHomePage extends StatelessWidget {
-  const QuizHomePage({super.key});
+class PageFormularioFinal extends StatelessWidget {
+  const PageFormularioFinal({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // 🌟 AppBar padrão
       appBar: AppBar(
         title: const Text('Cuide-se Mais'),
         actions: const [
@@ -18,32 +18,26 @@ class QuizHomePage extends StatelessWidget {
         ],
       ),
 
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+      body: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(
-                Icons.emoji_events,
-                size: 80,
+                Icons.check_circle_outline,
                 color: AppColors.primary,
+                size: 100,
               ),
               const SizedBox(height: 24),
               Text(
-                'Quiz de Saúde',
+                'Formulário Enviado!',
                 style: AppTextStyles.title,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
               Text(
-                'e Qualidade de Vida',
-                style: AppTextStyles.subtitle,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'Teste seus conhecimentos sobre hábitos saudáveis e bem-estar com 10 perguntas.',
+                'Suas respostas foram registradas com sucesso.\nAgradecemos sua participação!',
                 style: AppTextStyles.body,
                 textAlign: TextAlign.center,
               ),
@@ -52,21 +46,18 @@ class QuizHomePage extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const QuizPage(),
-                      ),
-                    );
+                    // volta pra Home
+                    Navigator.popUntil(context, (route) => route.isFirst);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.buttonBackground,
+                    backgroundColor: AppColors.primary,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                   child: Text(
-                    'Iniciar Quiz',
+                    'Voltar à Home',
                     style: AppTextStyles.button,
                   ),
                 ),
