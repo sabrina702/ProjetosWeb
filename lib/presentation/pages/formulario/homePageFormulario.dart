@@ -81,7 +81,7 @@ class Page2 extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
-            label: 'Profile',
+            label: 'Perfil',
           ),
         ],
       ),
