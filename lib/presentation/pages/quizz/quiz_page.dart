@@ -41,86 +41,80 @@ class _QuizPageState extends State<QuizPage> {
     final currentQuestion = quizQuestions[currentQuestionIndex];
 
     return Scaffold(
+      resizeToAvoidBottomInset: true, // evita overflow com teclado
+      appBar: AppBar(
+        title: const Text('Cuide-se Mais'),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 16.0),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Column(
           children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              color: AppColors.primary,
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.favorite,
-                    color: Colors.white,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Cuide-se Mais',
-                    style: AppTextStyles.title.copyWith(color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
             LinearProgressIndicator(
               value: (currentQuestionIndex + 1) / quizQuestions.length,
               backgroundColor: Colors.grey[200],
-              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+              valueColor:
+                  const AlwaysStoppedAnimation<Color>(AppColors.primary),
             ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Tema 1: Saúde e Qualidade de Vida',
-                    style: AppTextStyles.subtitle,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    '${currentQuestionIndex + 1}. ${currentQuestion.question}',
-                    style: AppTextStyles.title.copyWith(fontSize: 20),
-                  ),
-                  const SizedBox(height: 24),
-                  ...List.generate(
-                    currentQuestion.options.length,
-                    (index) => Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
-                      child: InkWell(
-                        onTap: () => _handleAnswer(index),
-                        child: Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.primary),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.radio_button_unchecked,
-                                color: AppColors.primary,
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Text(
-                                  currentQuestion.options[index],
-                                  style: AppTextStyles.body,
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Tema 1: Saúde e Qualidade de Vida',
+                      style: AppTextStyles.subtitle,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      '${currentQuestionIndex + 1}. ${currentQuestion.question}',
+                      style: AppTextStyles.title.copyWith(fontSize: 20),
+                    ),
+                    const SizedBox(height: 24),
+                    ...List.generate(
+                      currentQuestion.options.length,
+                      (index) => Padding(
+                        padding: const EdgeInsets.only(bottom: 16.0),
+                        child: InkWell(
+                          onTap: () => _handleAnswer(index),
+                          child: Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: AppColors.primary),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.radio_button_unchecked,
+                                  color: AppColors.primary,
                                 ),
-                              ),
-                            ],
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    currentQuestion.options[index],
+                                    style: AppTextStyles.body,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-            const Spacer(),
             Container(
               width: double.infinity,
               margin: const EdgeInsets.all(16),
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {}, // ou use _handleAnswer para avançar
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.buttonBackground,
                   padding: const EdgeInsets.symmetric(vertical: 16),
@@ -134,43 +128,23 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
             ),
-            Container(
-              padding: const EdgeInsets.all(16),
-              color: AppColors.navigationBarBackground,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        Icons.home,
-                        color: Colors.white,
-                      ),
-                      Text(
-                        'Home',
-                        style: AppTextStyles.body.copyWith(color: Colors.white),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        Icons.person_outline,
-                        color: Colors.white,
-                      ),
-                      Text(
-                        'Perfil',
-                        style: AppTextStyles.body.copyWith(color: Colors.white),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: AppColors.primary,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white70,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            label: 'Perfil',
+          ),
+        ],
       ),
     );
   }
