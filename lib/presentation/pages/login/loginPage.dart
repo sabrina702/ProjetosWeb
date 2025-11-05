@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:myapp/presentation/pages/homePage.dart';
+import 'package:myapp/service/auth_service.dart';
 import 'package:myapp/theme/colors.dart';
 import 'package:myapp/theme/text_styles.dart';
 
@@ -14,22 +16,45 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _authService = AuthService();
 
-  void _login() {
+  bool _loading = false;
+
+  void _login() async {
     if (_formKey.currentState!.validate()) {
-      if (_emailController.text == 'admin' &&
-          _passwordController.text == '1234') {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
+      setState(() => _loading = true);
+
+      try {
+        final user = await _authService.login(
+          _emailController.text.trim(),
+          _passwordController.text.trim(),
         );
-      } else {
+
+        if (user != null) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage()),
+          );
+        }
+      } on FirebaseAuthException catch (e) {
+        String message = 'Erro ao fazer login.';
+
+        if (e.code == 'user-not-found') {
+          message = 'Usuário não encontrado.';
+        } else if (e.code == 'wrong-password') {
+          message = 'Senha incorreta.';
+        } else if (e.code == 'invalid-email') {
+          message = 'E-mail inválido.';
+        }
+
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Usuário ou senha incorretos.'),
+          SnackBar(
+            content: Text(message),
             backgroundColor: Colors.redAccent,
           ),
         );
+      } finally {
+        setState(() => _loading = false);
       }
     }
   }
@@ -39,11 +64,6 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cuide-se Mais'),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 16.0),
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -77,13 +97,13 @@ class _LoginPageState extends State<LoginPage> {
                   TextFormField(
                     controller: _emailController,
                     decoration: const InputDecoration(
-                      labelText: 'Usuário',
+                      labelText: 'E-mail',
                       prefixIcon: Icon(Icons.person_outline),
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Digite seu usuário';
+                        return 'Digite seu e-mail';
                       }
                       return null;
                     },
@@ -110,7 +130,7 @@ class _LoginPageState extends State<LoginPage> {
 
                   // Botão Entrar
                   ElevatedButton(
-                    onPressed: _login,
+                    onPressed: _loading ? null : _login,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -118,10 +138,19 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: Text(
-                      'Entrar',
-                      style: AppTextStyles.button,
-                    ),
+                    child: _loading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : Text('Entrar', style: AppTextStyles.button),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Link para cadastro
+                  TextButton(
+                    onPressed: () {
+                      // depois você pode redirecionar pra tela de cadastro
+                    },
+                    child: const Text('Não tem conta? Cadastre-se'),
                   ),
                 ],
               ),
