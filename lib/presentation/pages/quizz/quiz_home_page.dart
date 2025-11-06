@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/presentation/pages/perfil/perfilDrawer.dart';
 import 'package:myapp/presentation/pages/quizz/quiz_page.dart';
 import 'package:myapp/theme/colors.dart';
 import 'package:myapp/theme/text_styles.dart';
@@ -9,13 +10,10 @@ class QuizHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const PerfilDrawer(),
       appBar: AppBar(
         title: const Text('Cuide-se Mais'),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 16.0),
-          ),
-        ],
+        actions: const [Padding(padding: EdgeInsets.only(right: 16.0))],
       ),
 
       body: SafeArea(
@@ -53,9 +51,7 @@ class QuizHomePage extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const QuizPage(),
-                      ),
+                      MaterialPageRoute(builder: (context) => const QuizPage()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -65,10 +61,7 @@ class QuizHomePage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Text(
-                    'Iniciar Quiz',
-                    style: AppTextStyles.button,
-                  ),
+                  child: Text('Iniciar Quiz', style: AppTextStyles.button),
                 ),
               ),
             ],
@@ -76,20 +69,29 @@ class QuizHomePage extends StatelessWidget {
         ),
       ),
 
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: AppColors.primary,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white70,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'Perfil',
-          ),
-        ],
+      bottomNavigationBar: Builder(
+        builder: (context) => BottomNavigationBar(
+          backgroundColor: AppColors.primary,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.white70,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline),
+              label: 'Perfil',
+            ),
+          ],
+          onTap: (index) {
+            if (index == 0) {
+              Navigator.pushNamed(context, '/home');
+            } else if (index == 1) {
+              Scaffold.of(context).openDrawer();
+            }
+          },
+        ),
       ),
     );
   }

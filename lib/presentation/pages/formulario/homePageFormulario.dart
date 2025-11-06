@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/presentation/pages/formulario/PageFormulario1.dart';
+import 'package:myapp/presentation/pages/perfil/perfilDrawer.dart';
 import 'package:myapp/theme/colors.dart';
 import 'package:myapp/theme/text_styles.dart';
 
@@ -9,13 +10,10 @@ class Page2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const PerfilDrawer(),
       appBar: AppBar(
         title: const Text('Cuide-se Mais'),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 16.0),
-          ),
-        ],
+        actions: const [Padding(padding: EdgeInsets.only(right: 16.0))],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
@@ -41,8 +39,10 @@ class Page2 extends StatelessWidget {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 14,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -59,7 +59,8 @@ class Page2 extends StatelessWidget {
                 child: Text(
                   'Começar',
                   style: TextStyle(
-                    color: AppColors.background, // supondo que você tenha AppColors.white
+                    color: AppColors
+                        .background, // supondo que você tenha AppColors.white
                     fontWeight: FontWeight.bold, // opcional
                     fontSize: 16, // opcional
                   ),
@@ -70,20 +71,29 @@ class Page2 extends StatelessWidget {
         ),
       ),
 
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: AppColors.primary,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white70,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'Perfil',
-          ),
-        ],
+      bottomNavigationBar: Builder(
+        builder: (context) => BottomNavigationBar(
+          backgroundColor: AppColors.primary,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.white70,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline),
+              label: 'Perfil',
+            ),
+          ],
+          onTap: (index) {
+            if (index == 0) {
+              Navigator.pushNamed(context, '/home');
+            } else if (index == 1) {
+              Scaffold.of(context).openDrawer();
+            }
+          },
+        ),
       ),
     );
   }
