@@ -29,7 +29,6 @@ class _LoginPageState extends State<LoginPage> {
           _emailController.text.trim(),
           _passwordController.text.trim(),
         );
-
         if (users != null) {
           Navigator.pushReplacement(
             context,
