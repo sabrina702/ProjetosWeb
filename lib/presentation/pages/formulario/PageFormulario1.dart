@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/presentation/pages/formulario/PageFormulario2.dart';
+import 'package:myapp/presentation/pages/perfil/perfilDrawer.dart';
 import 'package:myapp/theme/colors.dart';
 
 class PageFormulario1 extends StatefulWidget {
@@ -16,14 +17,11 @@ class _PageFormulario1State extends State<PageFormulario1> {
 
   @override
   Widget build(BuildContext context) {
-   return Scaffold(
+    return Scaffold(
+      drawer: const PerfilDrawer(),
       appBar: AppBar(
         title: const Text('Cuide-se Mais'),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 16.0),
-          ),
-        ],
+        actions: const [Padding(padding: EdgeInsets.only(right: 16.0))],
       ),
 
       body: Padding(
@@ -58,8 +56,10 @@ class _PageFormulario1State extends State<PageFormulario1> {
                     borderRadius: BorderRadius.circular(30),
                     borderSide: BorderSide(color: AppColors.primary, width: 2),
                   ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 14,
+                  ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -96,8 +96,10 @@ class _PageFormulario1State extends State<PageFormulario1> {
                     borderRadius: BorderRadius.circular(30),
                     borderSide: BorderSide(color: AppColors.primary, width: 2),
                   ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 14,
+                  ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -135,13 +137,14 @@ class _PageFormulario1State extends State<PageFormulario1> {
                     }
                   },
                   child: Text(
-                  'Próximo',
-                  style: TextStyle(
-                    color: AppColors.background, // supondo que você tenha AppColors.white
-                    fontWeight: FontWeight.bold, // opcional
-                    fontSize: 16, // opcional
+                    'Próximo',
+                    style: TextStyle(
+                      color: AppColors
+                          .background, // supondo que você tenha AppColors.white
+                      fontWeight: FontWeight.bold, // opcional
+                      fontSize: 16, // opcional
+                    ),
                   ),
-                ),
                 ),
               ),
             ],
@@ -149,20 +152,29 @@ class _PageFormulario1State extends State<PageFormulario1> {
         ),
       ),
 
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: AppColors.primary,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white70,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'Perfil',
-          ),
-        ],
+      bottomNavigationBar: Builder(
+        builder: (context) => BottomNavigationBar(
+          backgroundColor: AppColors.primary,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.white70,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline),
+              label: 'Perfil',
+            ),
+          ],
+          onTap: (index) {
+            if (index == 0) {
+              Navigator.pushNamed(context, '/home');
+            } else if (index == 1) {
+              Scaffold.of(context).openDrawer();
+            }
+          },
+        ),
       ),
     );
   }
