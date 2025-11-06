@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:myapp/presentation/pages/homePage.dart';
+import 'package:myapp/presentation/pages/home/homePage.dart';
 import 'package:myapp/service/auth_service.dart';
 import 'package:myapp/theme/colors.dart';
 import 'package:myapp/theme/text_styles.dart';
@@ -25,12 +25,12 @@ class _LoginPageState extends State<LoginPage> {
       setState(() => _loading = true);
 
       try {
-        final user = await _authService.login(
+        final users = await _authService.login(
           _emailController.text.trim(),
           _passwordController.text.trim(),
         );
 
-        if (user != null) {
+        if (users != null) {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const HomePage()),

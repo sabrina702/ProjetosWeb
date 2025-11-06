@@ -30,7 +30,8 @@ class _QuizPageState extends State<QuizPage> {
     } else {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => QuizResultPage(score: correctAnswers),
+          builder: (context) =>
+              QuizResultPage(score: correctAnswers, userAnswers: []),
         ),
       );
     }
@@ -44,11 +45,7 @@ class _QuizPageState extends State<QuizPage> {
       resizeToAvoidBottomInset: true, // evita overflow com teclado
       appBar: AppBar(
         title: const Text('Cuide-se Mais'),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 16.0),
-          ),
-        ],
+        actions: const [Padding(padding: EdgeInsets.only(right: 16.0))],
       ),
       body: SafeArea(
         child: Column(
@@ -56,8 +53,9 @@ class _QuizPageState extends State<QuizPage> {
             LinearProgressIndicator(
               value: (currentQuestionIndex + 1) / quizQuestions.length,
               backgroundColor: Colors.grey[200],
-              valueColor:
-                  const AlwaysStoppedAnimation<Color>(AppColors.primary),
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                AppColors.primary,
+              ),
             ),
             Expanded(
               child: SingleChildScrollView(
@@ -107,24 +105,6 @@ class _QuizPageState extends State<QuizPage> {
                       ),
                     ),
                   ],
-                ),
-              ),
-            ),
-            Container(
-              width: double.infinity,
-              margin: const EdgeInsets.all(16),
-              child: ElevatedButton(
-                onPressed: () {}, // ou use _handleAnswer para avançar
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.buttonBackground,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: Text(
-                  'Próxima Pergunta',
-                  style: AppTextStyles.button,
                 ),
               ),
             ),

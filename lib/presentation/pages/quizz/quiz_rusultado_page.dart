@@ -1,18 +1,70 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/theme/colors.dart';
 import 'package:myapp/theme/text_styles.dart';
 import 'quiz_home_page.dart';
 
-class QuizResultPage extends StatelessWidget {
+class QuizResultPage extends StatefulWidget {
   final int score;
+  final List<int> userAnswers;
 
   const QuizResultPage({
     super.key,
     required this.score,
+    required this.userAnswers,
   });
 
+  @override
+  State<QuizResultPage> createState() => _QuizResultPageState();
+}
+
+class _QuizResultPageState extends State<QuizResultPage> {
+  bool _saving = true;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _saveResult();
+  }
+
+  Future<void> _saveResult() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      setState(() {
+        _saving = false;
+        _error = "Usuário não está logado.";
+      });
+      return;
+    }
+
+    final quizResult = {
+      'score': widget.score,
+      'totalQuestions': 10,
+      'answers': widget.userAnswers,
+      'takenAt': FieldValue.serverTimestamp(),
+    };
+
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('QuizzResultado')
+          .add(quizResult);
+
+      setState(() => _saving = false);
+    } catch (e) {
+      setState(() {
+        _saving = false;
+        _error = "Erro ao salvar resultado: $e";
+      });
+    }
+  }
+
   String get _getMessage {
-    final percentage = (score / 10) * 100;
+    final percentage = (widget.score / 10) * 100;
     if (percentage >= 90) return 'Excelente!';
     if (percentage >= 70) return 'Muito bom!';
     if (percentage >= 50) return 'Bom!';
@@ -22,105 +74,88 @@ class QuizResultPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Cuide-se Mais'),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 16.0),
-          ),
-        ],
-      ),
+      appBar: AppBar(title: const Text('Cuide-se Mais')),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              const SizedBox(height: 24),
-              const Icon(
-                Icons.emoji_events,
-                size: 80,
-                color: AppColors.primary,
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'Quiz Concluído!',
-                style: AppTextStyles.title,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 32),
-              Text(
-                '$score/10',
-                style: AppTextStyles.score,
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                'Respostas corretas',
-                style: AppTextStyles.subtitle,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              Container(
+        child: _saving
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  '${(score / 10 * 100).toStringAsFixed(0)}%\n${_getMessage}',
-                  style: AppTextStyles.subtitle.copyWith(color: Colors.white),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              const SizedBox(height: 30),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const QuizHomePage(),
+                child: Column(
+                  children: [
+                    if (_error != null)
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          _error!,
+                          style: const TextStyle(color: Colors.red),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.buttonBackground,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                    const SizedBox(height: 24),
+                    const Icon(
+                      Icons.emoji_events,
+                      size: 80,
+                      color: AppColors.primary,
                     ),
-                  ),
-                  child: Text(
-                    'Tentar Novamente',
-                    style: AppTextStyles.button,
-                  ),
+                    const SizedBox(height: 24),
+                    Text(
+                      'Quiz Concluído!',
+                      style: AppTextStyles.title,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 32),
+                    Text(
+                      '${widget.score}/10',
+                      style: AppTextStyles.score,
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      'Respostas corretas',
+                      style: AppTextStyles.subtitle,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 24),
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        '${(widget.score / 10 * 100).toStringAsFixed(0)}%\n${_getMessage}',
+                        style: AppTextStyles.subtitle.copyWith(
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => const QuizHomePage(),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.buttonBackground,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: Text(
+                          'Tentar Novamente',
+                          style: AppTextStyles.button,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 24),
-            ],
-          ),
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: AppColors.primary,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white70,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'Perfil',
-          ),
-        ],
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.pushNamed(context, '/home');
-          } else if (index == 1) {
-            Navigator.pushNamed(context, '/perfil');
-          }
-        },
       ),
     );
   }
