@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:myapp/presentation/pages/formulario/PageFormularioResultado.dart';
 import 'package:myapp/presentation/pages/login/loginPage.dart';
+import 'package:myapp/presentation/pages/quizz/quiz_page_resultado_dados.dart';
 import 'package:myapp/theme/colors.dart';
 import 'package:myapp/theme/text_styles.dart';
 
@@ -32,22 +34,26 @@ class PerfilDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.quiz_outlined),
             title: const Text("Resultado do Quiz"),
-            /*onTap: () {
+            onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const QuizResultsPage()),
+                MaterialPageRoute(
+                  builder: (context) => const QuizResultsPage(),
+                ),
               );
-            },*/
+            },
           ),
           ListTile(
             leading: const Icon(Icons.list_alt_outlined),
             title: const Text("Resultado do Formulário"),
-            /*onTap: () {
+            onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const FormResultsPage()),
+                MaterialPageRoute(
+                  builder: (context) => const PageFormularioResultado(),
+                ),
               );
-            },*/
+            },
           ),
           const Divider(),
           const SizedBox(height: 12),

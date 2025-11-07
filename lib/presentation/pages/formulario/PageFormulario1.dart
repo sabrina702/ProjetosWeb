@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/data/models/formularioData.dart';
 import 'package:myapp/presentation/pages/formulario/PageFormulario2.dart';
 import 'package:myapp/presentation/pages/perfil/perfilDrawer.dart';
 import 'package:myapp/theme/colors.dart';
@@ -123,15 +124,16 @@ class _PageFormulario1State extends State<PageFormulario1> {
                   ),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Campos validados com sucesso!'),
-                        ),
+                      final formularioData = FormularioData(
+                        nome: _nomeController.text,
+                        idade: _idadeController.text,
                       );
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const PageFormulario2(),
+                          builder: (context) =>
+                              PageFormulario2(formularioData: formularioData),
                         ),
                       );
                     }
