@@ -8,7 +8,10 @@ import 'package:intl/intl.dart';
 class PageFormularioResultado extends StatelessWidget {
   const PageFormularioResultado({super.key});
 
-  Map<String, String> get perguntas => {
+  // Perguntas na ordem correta
+  final Map<String, String> perguntas = const {
+    "nome": "Nome",
+    "idade": "Idade",
     "estresse":
         "1. Em geral, como você avaliaria o seu nível de estresse nos últimos 7 dias?",
     "ansiedade":
@@ -57,7 +60,9 @@ class PageFormularioResultado extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Resultados do Formulário')),
       body: StreamBuilder<QuerySnapshot>(
-        stream: userFormCollection.snapshots(),
+        stream: userFormCollection
+            .orderBy('takenAt', descending: true)
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(
@@ -92,34 +97,36 @@ class PageFormularioResultado extends StatelessWidget {
 
               final List<Widget> respostas = [];
 
-              data.forEach((key, value) {
-                if (key != 'takenAt') {
-                  // Se o campo está no mapa, usa o texto completo
-                  final textoPergunta = perguntas[key] ?? key;
+              // Garante que todas as perguntas apareçam na ordem certa
+              perguntas.forEach((key, pergunta) {
+                final valor = data.containsKey(key)
+                    ? (data[key] is List
+                          ? (data[key] as List).join(", ")
+                          : data[key])
+                    : 'Não respondido';
 
-                  respostas.add(
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            textoPergunta,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
+                respostas.add(
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          pergunta,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Resposta: ${value is List ? value.join(", ") : value}',
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Resposta: $valor',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ],
                     ),
-                  );
-                }
+                  ),
+                );
               });
 
               return Card(

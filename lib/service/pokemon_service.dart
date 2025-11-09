@@ -11,7 +11,7 @@ class PokemonService {
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      final pokemons = (data['pokemons'] as List)
+      final pokemons = (data['pokemon'] as List)
           .map((p) => Pokemon.fromJson(p))
           .toList();
 

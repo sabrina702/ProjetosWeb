@@ -11,9 +11,12 @@ class AuthService {
         password: password,
       );
       return userCredential.user;
+    } on FirebaseAuthException catch (e) {
+      // Propaga o erro para ser tratado na tela
+      throw e;
     } catch (e) {
-      print('Erro no cadastro: $e');
-      return null;
+      print('Erro inesperado no cadastro: $e');
+      rethrow;
     }
   }
 
@@ -25,9 +28,12 @@ class AuthService {
         password: password,
       );
       return userCredential.user;
+    } on FirebaseAuthException catch (e) {
+      // Aqui é o principal: joga o erro pra fora
+      throw e;
     } catch (e) {
-      print('Erro no login: $e');
-      return null;
+      print('Erro inesperado no login: $e');
+      rethrow;
     }
   }
 

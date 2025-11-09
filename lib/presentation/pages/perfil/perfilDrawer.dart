@@ -20,12 +20,16 @@ class PerfilDrawer extends StatelessWidget {
             accountName: Text(user?.displayName ?? "Usuário"),
             accountEmail: Text(user?.email ?? ""),
             currentAccountPicture: CircleAvatar(
-              backgroundColor: AppColors.primary,
+              backgroundColor: Colors.white, // círculo branco
               child: Text(
                 user?.displayName != null
                     ? user!.displayName![0]
                     : user?.email?[0] ?? "U",
-                style: const TextStyle(fontSize: 24, color: Colors.white),
+                style: TextStyle(
+                  fontSize: 24,
+                  color: AppColors.primary, // letra roxa
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             decoration: const BoxDecoration(color: AppColors.primary),

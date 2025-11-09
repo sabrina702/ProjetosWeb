@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/data/models/pokemon.dart';
+import 'package:myapp/presentation/pages/home/homePage.dart';
 import 'package:myapp/presentation/pages/perfil/perfilDrawer.dart';
 import 'package:myapp/presentation/widgets/custom_bottom_nav.dart';
 import 'package:myapp/service/pokemon_service.dart';
+import 'package:myapp/theme/colors.dart';
+import 'package:myapp/theme/text_styles.dart';
 
 class PokemonPage extends StatefulWidget {
   @override
@@ -58,10 +61,34 @@ class _PokemonPageState extends State<PokemonPage> {
                     'Tipo: ${_pokemon!.type.join(', ')}',
                     style: const TextStyle(fontSize: 16),
                   ),
-                  const SizedBox(height: 30),
-                  ElevatedButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('Voltar'),
+                  const SizedBox(height: 40),
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30,
+                        vertical: 14,
+                      ),
+                      elevation: 4,
+                    ),
+                    icon: const Icon(Icons.home),
+                    label: const Text(
+                      'Voltar para o Início',
+                      style: AppTextStyles.button,
+                    ),
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const HomePage(),
+                        ),
+                        (route) => false,
+                      );
+                    },
                   ),
                 ],
               ),

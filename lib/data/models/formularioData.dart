@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FormularioData {
   String nome;
   String idade;
+
   String? estresse;
   String? ansiedade;
   String? sobrecarga;
@@ -31,32 +32,42 @@ class FormularioData {
     this.suplementos,
     this.atividadeFreq,
     this.duracao,
-    List<String>? motivacoes,
-    List<String>? impeditivos,
+    this.motivacoes = const [],
+    this.impeditivos = const [],
     this.sono,
     this.telaAntesDormir,
-  }) : motivacoes = motivacoes ?? [],
-       impeditivos = impeditivos ?? [];
+  });
 
   Map<String, dynamic> toMap() {
     return {
       'nome': nome,
       'idade': idade,
-      'estresse': estresse,
-      'ansiedade': ansiedade,
-      'sobrecarga': sobrecarga,
-      'refeicoes': refeicoes,
-      'frutas': frutas,
-      'agua': agua,
-      'ultraprocessados': ultraprocessados,
-      'suplementos': suplementos,
-      'atividadeFreq': atividadeFreq,
-      'duracao': duracao,
-      'motivacoes': motivacoes,
-      'impeditivos': impeditivos,
-      'sono': sono,
-      'telaAntesDormir': telaAntesDormir,
-      'takenAt': FieldValue.serverTimestamp(),
+      'respostas': toList(), // lista ordenada
+      'takenAt': Timestamp.now(),
     };
+  }
+
+  List<Map<String, dynamic>> toList() {
+    return [
+      {'pergunta': 'Nome', 'resposta': nome},
+      {'pergunta': 'Idade', 'resposta': idade},
+      {'pergunta': 'Estresse', 'resposta': estresse},
+      {'pergunta': 'Ansiedade', 'resposta': ansiedade},
+      {'pergunta': 'Sobrecarga', 'resposta': sobrecarga},
+      {'pergunta': 'Refeições', 'resposta': refeicoes},
+      {
+        'pergunta': 'Frutas',
+        'resposta': frutas,
+      }, // pode converter em string se quiser
+      {'pergunta': 'Água', 'resposta': agua},
+      {'pergunta': 'Ultraprocessados', 'resposta': ultraprocessados},
+      {'pergunta': 'Suplementos', 'resposta': suplementos},
+      {'pergunta': 'Frequência de Atividade Física', 'resposta': atividadeFreq},
+      {'pergunta': 'Duração da Atividade', 'resposta': duracao},
+      {'pergunta': 'Motivações', 'resposta': motivacoes.join(', ')},
+      {'pergunta': 'Impeditivos', 'resposta': impeditivos.join(', ')},
+      {'pergunta': 'Sono', 'resposta': sono},
+      {'pergunta': 'Tela Antes de Dormir', 'resposta': telaAntesDormir},
+    ];
   }
 }

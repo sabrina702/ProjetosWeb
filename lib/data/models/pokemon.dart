@@ -16,7 +16,7 @@ class Pokemon {
       id: json['id'],
       name: json['name'],
       type: List<String>.from(json['type']),
-      image: json['image'],
+      image: json['img'],
     );
   }
 }
