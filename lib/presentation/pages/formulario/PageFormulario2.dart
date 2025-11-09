@@ -17,6 +17,7 @@ class PageFormulario2 extends StatefulWidget {
 class _PageFormulario2State extends State<PageFormulario2> {
   final _formKey = GlobalKey<FormState>();
   final ScrollController _scrollController = ScrollController();
+  String outroMotivo = '';
 
   // Campos do formulário
   String? estresse;
@@ -57,7 +58,7 @@ class _PageFormulario2State extends State<PageFormulario2> {
         .collection('users')
         .doc(user.uid)
         .collection('formularioRespostas')
-        .add(data.toMap());
+        .add(data.toMap()); // agora salva a lista ordenada
   }
 
   @override
@@ -349,42 +350,68 @@ class _PageFormulario2State extends State<PageFormulario2> {
                             .toList(),
                   ),
                   const SizedBox(height: 10),
-
                   // Pergunta 11 - Motivações
                   const Text(
                     '11. Quais são suas principais motivações para praticar atividade física?',
                     style: TextStyle(fontWeight: FontWeight.w500),
                   ),
+                  const SizedBox(height: 6),
                   Column(
-                    children:
-                        [
-                              'Manter a saúde',
-                              'Melhorar o humor e reduzir o estresse',
-                              'Questões estéticas (melhorar aparência, emagrecer, ganhar massa)',
-                              'Lazer ou diversão',
-                              'Indicação médica',
-                              'Conviver com outras pessoas',
-                              'Outros (especificar)',
-                            ]
-                            .map(
-                              (opcao) => CheckboxListTile(
-                                title: Text(opcao),
-                                value: motivacoes.contains(opcao),
-                                onChanged: (checked) {
-                                  setState(() {
-                                    if (checked == true) {
-                                      motivacoes.add(opcao);
-                                    } else {
-                                      motivacoes.remove(opcao);
-                                    }
-                                  });
-                                },
-                              ),
-                            )
-                            .toList(),
-                  ),
-                  const SizedBox(height: 10),
+                    children: [
+                      ...[
+                        'Manter a saúde',
+                        'Melhorar o humor e reduzir o estresse',
+                        'Questões estéticas (melhorar aparência, emagrecer, ganhar massa)',
+                        'Lazer ou diversão',
+                        'Indicação médica',
+                        'Conviver com outras pessoas',
+                        'Outros (especificar)',
+                      ].map((opcao) {
+                        return CheckboxListTile(
+                          title: Text(opcao),
+                          value: motivacoes.contains(opcao),
+                          onChanged: (checked) {
+                            setState(() {
+                              if (checked == true) {
+                                motivacoes.add(opcao);
+                              } else {
+                                motivacoes.remove(opcao);
+                                if (opcao == 'Outros (especificar)')
+                                  outroMotivo = '';
+                              }
+                            });
+                          },
+                          activeColor: AppColors.primary,
+                        );
+                      }),
 
+                      // Campo extra quando "Outros" for marcado
+                      if (motivacoes.contains('Outros (especificar)'))
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 40,
+                            right: 16,
+                            bottom: 10,
+                          ),
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              labelText: 'Especifique sua motivação',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              prefixIcon: const Icon(Icons.edit_outlined),
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                outroMotivo = value;
+                              });
+                            },
+                          ),
+                        ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 10),
                   // Pergunta 12 - Impeditivos
                   const Text(
                     '12. O que mais te impede de praticar atividade física com frequência?',
@@ -505,6 +532,11 @@ class _PageFormulario2State extends State<PageFormulario2> {
                           widget.formularioData.sono = sono;
                           widget.formularioData.telaAntesDormir =
                               telaAntesDormir;
+
+                          if (motivacoes.contains('Outros (especificar)') &&
+                              outroMotivo.isNotEmpty) {
+                            motivacoes.add('Outro: $outroMotivo');
+                          }
 
                           // Salva no Firebase
                           await saveFormToFirebase(widget.formularioData);

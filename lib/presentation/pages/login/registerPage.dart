@@ -1,50 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:myapp/presentation/pages/home/homePage.dart';
-import 'package:myapp/presentation/pages/login/registerPage.dart';
 import 'package:myapp/service/auth_service.dart';
 import 'package:myapp/theme/colors.dart';
 import 'package:myapp/theme/text_styles.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   final _authService = AuthService();
 
   bool _loading = false;
 
-  void _login() async {
+  void _register() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _loading = true);
 
+      if (_passwordController.text != _confirmPasswordController.text) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('As senhas não coincidem.'),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+        setState(() => _loading = false);
+        return;
+      }
+
       try {
-        final users = await _authService.login(
+        final user = await _authService.register(
           _emailController.text.trim(),
           _passwordController.text.trim(),
         );
-        if (users != null) {
+
+        if (user != null) {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const HomePage()),
           );
         }
       } on FirebaseAuthException catch (e) {
-        String message = 'Erro ao fazer login.';
+        String message = 'Erro ao criar conta.';
 
-        if (e.code == 'user-not-found') {
-          message = 'Usuário não encontrado.';
-        } else if (e.code == 'wrong-password') {
-          message = 'Senha incorreta.';
+        if (e.code == 'email-already-in-use') {
+          message = 'Este e-mail já está em uso.';
         } else if (e.code == 'invalid-email') {
           message = 'E-mail inválido.';
+        } else if (e.code == 'weak-password') {
+          message = 'Senha muito fraca.';
         }
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -59,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Cuide-se Mais')),
+      appBar: AppBar(title: const Text('Cadastre-se')),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Center(
@@ -70,25 +82,25 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const Icon(
-                    Icons.favorite,
+                    Icons.person_add,
                     color: AppColors.primary,
                     size: 80,
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Bem-vindo!',
+                    'Crie sua conta',
                     style: AppTextStyles.title,
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Acesse sua conta para continuar',
+                    'Preencha os campos abaixo para se cadastrar',
                     style: AppTextStyles.subtitle,
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 32),
 
-                  // Campo de e-mail
+                  // E-mail
                   TextFormField(
                     controller: _emailController,
                     decoration: const InputDecoration(
@@ -105,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Campo de senha
+                  // Senha
                   TextFormField(
                     controller: _passwordController,
                     obscureText: true,
@@ -117,15 +129,35 @@ class _LoginPageState extends State<LoginPage> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Digite sua senha';
+                      } else if (value.length < 6) {
+                        return 'A senha deve ter pelo menos 6 caracteres';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Confirmar senha
+                  TextFormField(
+                    controller: _confirmPasswordController,
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      labelText: 'Confirmar Senha',
+                      prefixIcon: Icon(Icons.lock_outline),
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Confirme sua senha';
                       }
                       return null;
                     },
                   ),
                   const SizedBox(height: 32),
 
-                  // Botão Entrar
+                  // Botão de cadastro
                   ElevatedButton(
-                    onPressed: _loading ? null : _login,
+                    onPressed: _loading ? null : _register,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -135,22 +167,17 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     child: _loading
                         ? const CircularProgressIndicator(color: Colors.white)
-                        : Text('Entrar', style: AppTextStyles.button),
+                        : Text('Cadastrar', style: AppTextStyles.button),
                   ),
 
                   const SizedBox(height: 16),
 
-                  // Link para cadastro
+                  // Link para login
                   TextButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const RegisterPage(),
-                        ),
-                      );
+                      Navigator.pop(context); // volta para a tela de login
                     },
-                    child: const Text('Não tem conta? Cadastre-se'),
+                    child: const Text('Já tem conta? Faça login'),
                   ),
                 ],
               ),

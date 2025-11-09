@@ -4,6 +4,7 @@ import 'package:myapp/presentation/pages/home/homePage.dart';
 import 'package:myapp/presentation/pages/perfil/perfilDrawer.dart';
 import 'package:myapp/presentation/widgets/custom_bottom_nav.dart';
 import 'package:myapp/service/pokemon_service.dart';
+import 'package:myapp/theme/colors.dart';
 import 'package:myapp/theme/text_styles.dart';
 
 class PokemonPage extends StatefulWidget {
@@ -63,6 +64,7 @@ class _PokemonPageState extends State<PokemonPage> {
                   const SizedBox(height: 40),
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
