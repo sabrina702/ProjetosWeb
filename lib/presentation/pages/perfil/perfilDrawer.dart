@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:myapp/presentation/pages/formulario/PageFormularioResultado.dart';
 import 'package:myapp/presentation/pages/login/loginPage.dart';
-import 'package:myapp/presentation/pages/quizz/quiz_page_resultado_dados.dart';
+import 'package:myapp/presentation/pages/quizz/quiz_page_resultado.dart';
 import 'package:myapp/theme/colors.dart';
-import 'package:myapp/theme/text_styles.dart';
 
 class PerfilDrawer extends StatelessWidget {
   const PerfilDrawer({super.key});
@@ -56,27 +55,46 @@ class PerfilDrawer extends StatelessWidget {
             },
           ),
           const Divider(),
-          const SizedBox(height: 12),
-          ElevatedButton.icon(
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut(); // desloga o usuário
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const LoginPage(),
-                ), // vai para login
-              );
-            },
-            icon: const Icon(Icons.logout),
-            label: const Text('Sair', style: AppTextStyles.button),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: SizedBox(
+              height: 42, // 🔹 botão menor
+              child: ElevatedButton.icon(
+                onPressed: () async {
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                  );
+                },
+                icon: const Icon(
+                  Icons.logout,
+                  color: Colors.white,
+                ), // 🔹 ícone branco
+                label: const Text(
+                  'Sair',
+                  style: TextStyle(
+                    color: Colors.white, // 🔹 texto branco
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 12,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  elevation: 2,
+                ),
               ),
             ),
           ),
+          const SizedBox(height: 16),
         ],
       ),
     );

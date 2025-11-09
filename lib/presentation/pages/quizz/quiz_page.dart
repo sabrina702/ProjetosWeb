@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/data/models/quiz_question.dart';
 import 'package:myapp/presentation/pages/perfil/perfilDrawer.dart';
-import 'package:myapp/presentation/pages/quizz/quiz_rusultado_page.dart';
+import 'package:myapp/presentation/pages/quizz/quiz_final_page.dart';
+import 'package:myapp/presentation/widgets/custom_bottom_nav.dart';
 import 'package:myapp/theme/colors.dart';
 import 'package:myapp/theme/text_styles.dart';
 
@@ -32,7 +33,7 @@ class _QuizPageState extends State<QuizPage> {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) =>
-              QuizResultPage(score: correctAnswers, userAnswers: []),
+              QuizPageFinal(score: correctAnswers, userAnswers: []),
         ),
       );
     }
@@ -114,30 +115,7 @@ class _QuizPageState extends State<QuizPage> {
         ),
       ),
 
-      bottomNavigationBar: Builder(
-        builder: (context) => BottomNavigationBar(
-          backgroundColor: AppColors.primary,
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.white70,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline),
-              label: 'Perfil',
-            ),
-          ],
-          onTap: (index) {
-            if (index == 0) {
-              Navigator.pushNamed(context, '/home');
-            } else if (index == 1) {
-              Scaffold.of(context).openDrawer();
-            }
-          },
-        ),
-      ),
+      bottomNavigationBar: const CustomBottomNav(currentIndex: 0),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myapp/data/models/formularioData.dart';
 import 'package:myapp/presentation/pages/formulario/PageFormulario2.dart';
 import 'package:myapp/presentation/pages/perfil/perfilDrawer.dart';
+import 'package:myapp/presentation/widgets/custom_bottom_nav.dart';
 import 'package:myapp/theme/colors.dart';
 
 class PageFormulario1 extends StatefulWidget {
@@ -154,30 +155,7 @@ class _PageFormulario1State extends State<PageFormulario1> {
         ),
       ),
 
-      bottomNavigationBar: Builder(
-        builder: (context) => BottomNavigationBar(
-          backgroundColor: AppColors.primary,
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.white70,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline),
-              label: 'Perfil',
-            ),
-          ],
-          onTap: (index) {
-            if (index == 0) {
-              Navigator.pushNamed(context, '/home');
-            } else if (index == 1) {
-              Scaffold.of(context).openDrawer();
-            }
-          },
-        ),
-      ),
+      bottomNavigationBar: const CustomBottomNav(currentIndex: 0),
     );
   }
 }
