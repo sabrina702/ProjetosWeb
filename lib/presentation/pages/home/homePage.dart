@@ -55,7 +55,7 @@ class HomePage extends StatelessWidget {
                 crossAxisSpacing: 12,
                 children: [
                   _buildCategoryCard(
-                    icon: Icons.description_outlined,
+                    icon: Icons.list_alt_outlined,
                     title: 'Formulário',
                     onTap: () {
                       Navigator.push(
@@ -65,7 +65,7 @@ class HomePage extends StatelessWidget {
                     },
                   ),
                   _buildCategoryCard(
-                    icon: Icons.chat_outlined,
+                    icon: Icons.quiz_outlined,
                     title: 'Quiz',
                     onTap: () {
                       Navigator.push(
