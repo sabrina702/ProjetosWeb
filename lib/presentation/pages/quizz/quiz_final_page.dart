@@ -1,25 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/presentation/pages/perfil/perfilDrawer.dart';
+import 'package:myapp/presentation/pages/pokemonPage.dart';
+import 'package:myapp/presentation/widgets/custom_bottom_nav.dart';
 import 'package:myapp/theme/colors.dart';
 import 'package:myapp/theme/text_styles.dart';
-import 'quiz_home_page.dart';
 
-class QuizResultPage extends StatefulWidget {
+class QuizPageFinal extends StatefulWidget {
   final int score;
   final List<int> userAnswers;
 
-  const QuizResultPage({
+  const QuizPageFinal({
     super.key,
     required this.score,
     required this.userAnswers,
   });
 
   @override
-  State<QuizResultPage> createState() => _QuizResultPageState();
+  State<QuizPageFinal> createState() => _QuizResultPageState();
 }
 
-class _QuizResultPageState extends State<QuizResultPage> {
+class _QuizResultPageState extends State<QuizPageFinal> {
   bool _saving = true;
   String? _error;
 
@@ -74,6 +76,7 @@ class _QuizResultPageState extends State<QuizResultPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const PerfilDrawer(),
       appBar: AppBar(title: const Text('Cuide-se Mais')),
       body: SafeArea(
         child: _saving
@@ -134,9 +137,9 @@ class _QuizResultPageState extends State<QuizResultPage> {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.of(context).pushReplacement(
+                          Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => const QuizHomePage(),
+                              builder: (context) => PokemonPage(),
                             ),
                           );
                         },
@@ -148,7 +151,7 @@ class _QuizResultPageState extends State<QuizResultPage> {
                           ),
                         ),
                         child: Text(
-                          'Tentar Novamente',
+                          'Ver Prêmio 🎁',
                           style: AppTextStyles.button,
                         ),
                       ),
@@ -157,6 +160,8 @@ class _QuizResultPageState extends State<QuizResultPage> {
                 ),
               ),
       ),
+
+      bottomNavigationBar: const CustomBottomNav(currentIndex: 0),
     );
   }
 }
