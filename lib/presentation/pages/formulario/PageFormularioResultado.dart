@@ -37,8 +37,11 @@ class PageFormularioResultado extends StatelessWidget {
     if (data['respostas'] != null) {
       final List respostasList = data['respostas'];
       for (var r in respostasList) {
-        if (r['pergunta'] == perguntas[key]) {
-          return r['resposta']?.toString() ?? 'Não respondido';
+        if (r['pergunta'] == key) {
+          // ← comparar com a chave curta
+          final resposta = r['resposta'];
+          if (resposta is List) return resposta.join(", ");
+          return resposta?.toString() ?? 'Não respondido';
         }
       }
     }
