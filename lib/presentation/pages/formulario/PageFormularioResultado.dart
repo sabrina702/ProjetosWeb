@@ -1,44 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 import 'package:myapp/presentation/pages/perfil/perfilDrawer.dart';
 import 'package:myapp/presentation/widgets/custom_bottom_nav.dart';
-import 'package:intl/intl.dart';
 
 class PageFormularioResultado extends StatelessWidget {
   const PageFormularioResultado({super.key});
 
-  // Perguntas na ordem correta
+  // Perguntas na ordem correta, com a mesma string usada no FormularioData.toList()
   final Map<String, String> perguntas = const {
     "nome": "Nome",
     "idade": "Idade",
-    "estresse":
-        "1. Em geral, como você avaliaria o seu nível de estresse nos últimos 7 dias?",
-    "ansiedade":
-        "2. Com que frequência você tem se sentido ansioso(a), nervoso(a) ou tenso(a)?",
-    "sobrecarga":
-        "3. Com que frequência você se sente sobrecarregado(a) pelas suas responsabilidades diárias?",
-    "refeicoes":
-        "4. Quantas refeições completas (café da manhã, almoço, jantar) você costuma fazer por dia?",
-    "frutas":
-        "5. Com que frequência você consome frutas frescas durante o dia?",
-    "agua": "6. Quantos copos de água, em média, você consome por dia?",
-    "ultraprocessados":
-        "7. Com que frequência você consome alimentos ultraprocessados (refrigerantes, fast food, salgadinhos, doces)?",
-    "suplementos":
-        "8. Você utiliza algum tipo de suplemento alimentar (vitaminas, proteínas, colágeno, etc.)?",
-    "atividadeFreq":
-        "9. Com que frequência você pratica algum tipo de atividade física?",
-    "duracao":
-        "10. Quando pratica atividade física, qual é o tempo médio de duração de cada sessão?",
-    "motivacoes":
-        "11. Quais são suas principais motivações para praticar atividade física?",
-    "impeditivos":
-        "12. O que mais te impede de praticar atividade física com frequência?",
-    "sono": "13. Quantas horas de sono você costuma ter por noite, em média?",
-    "telaAntesDormir":
-        "14. Você costuma usar celular, computador ou assistir TV antes de dormir?",
+    "estresse": "Estresse",
+    "ansiedade": "Ansiedade",
+    "sobrecarga": "Sobrecarga",
+    "refeicoes": "Refeições",
+    "frutas": "Frutas",
+    "agua": "Água",
+    "ultraprocessados": "Ultraprocessados",
+    "suplementos": "Suplementos",
+    "atividadeFreq": "Frequência de Atividade Física",
+    "duracao": "Duração da Atividade",
+    "motivacoes": "Motivações",
+    "impeditivos": "Impeditivos",
+    "sono": "Sono",
+    "telaAntesDormir": "Tela Antes de Dormir",
   };
+
+  // Função para pegar a resposta correta dentro do array 'respostas'
+  String getResposta(Map<String, dynamic> data, String key) {
+    if (key == 'nome' || key == 'idade') {
+      return data[key]?.toString() ?? 'Não respondido';
+    }
+
+    if (data['respostas'] != null) {
+      final List respostasList = data['respostas'];
+      for (var r in respostasList) {
+        if (r['pergunta'] == perguntas[key]) {
+          return r['resposta']?.toString() ?? 'Não respondido';
+        }
+      }
+    }
+
+    return 'Não respondido';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +58,7 @@ class PageFormularioResultado extends StatelessWidget {
       );
     }
 
-    final CollectionReference userFormCollection = FirebaseFirestore.instance
+    final userFormCollection = FirebaseFirestore.instance
         .collection('users')
         .doc(user.uid)
         .collection('formularioRespostas');
@@ -75,7 +81,6 @@ class PageFormularioResultado extends StatelessWidget {
           }
 
           final docs = snapshot.data!.docs;
-
           if (docs.isEmpty) {
             return const Center(child: Text('Nenhum resultado encontrado'));
           }
@@ -88,46 +93,34 @@ class PageFormularioResultado extends StatelessWidget {
               final Map<String, dynamic> data =
                   doc.data() as Map<String, dynamic>;
 
-              final Timestamp? dataTimestamp = data['takenAt'] as Timestamp?;
-              final formattedDate = dataTimestamp != null
-                  ? DateFormat(
-                      'dd/MM/yyyy – HH:mm',
-                    ).format(dataTimestamp.toDate())
+              final Timestamp? timestamp = data['takenAt'] as Timestamp?;
+              final formattedDate = timestamp != null
+                  ? DateFormat('dd/MM/yyyy – HH:mm').format(timestamp.toDate())
                   : 'Data não informada';
 
-              final List<Widget> respostas = [];
-
-              // Garante que todas as perguntas apareçam na ordem certa
-              perguntas.forEach((key, pergunta) {
-                final valor = data.containsKey(key)
-                    ? (data[key] is List
-                          ? (data[key] as List).join(", ")
-                          : data[key])
-                    : 'Não respondido';
-
-                respostas.add(
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          pergunta,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+              final List<Widget> respostasWidgets = perguntas.keys.map((key) {
+                final resposta = getResposta(data, key);
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        perguntas[key]!,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Resposta: $valor',
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Resposta: $resposta',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ],
                   ),
                 );
-              });
+              }).toList();
 
               return Card(
                 margin: const EdgeInsets.symmetric(vertical: 8),
@@ -152,7 +145,7 @@ class PageFormularioResultado extends StatelessWidget {
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: respostas,
+                        children: respostasWidgets,
                       ),
                     ),
                   ],

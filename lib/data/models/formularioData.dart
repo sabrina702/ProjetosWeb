@@ -49,25 +49,31 @@ class FormularioData {
 
   List<Map<String, dynamic>> toList() {
     return [
-      {'pergunta': 'Nome', 'resposta': nome},
-      {'pergunta': 'Idade', 'resposta': idade},
-      {'pergunta': 'Estresse', 'resposta': estresse},
-      {'pergunta': 'Ansiedade', 'resposta': ansiedade},
-      {'pergunta': 'Sobrecarga', 'resposta': sobrecarga},
-      {'pergunta': 'Refeições', 'resposta': refeicoes},
+      {'pergunta': 'nome', 'resposta': nome},
+      {'pergunta': 'idade', 'resposta': idade},
+      {'pergunta': 'estresse', 'resposta': estresse ?? 'Não respondido'},
+      {'pergunta': 'ansiedade', 'resposta': ansiedade ?? 'Não respondido'},
+      {'pergunta': 'sobrecarga', 'resposta': sobrecarga ?? 'Não respondido'},
+      {'pergunta': 'refeicoes', 'resposta': refeicoes ?? 'Não respondido'},
+      {'pergunta': 'frutas', 'resposta': frutas},
+      {'pergunta': 'agua', 'resposta': agua ?? 'Não respondido'},
       {
-        'pergunta': 'Frutas',
-        'resposta': frutas,
-      }, // pode converter em string se quiser
-      {'pergunta': 'Água', 'resposta': agua},
-      {'pergunta': 'Ultraprocessados', 'resposta': ultraprocessados},
-      {'pergunta': 'Suplementos', 'resposta': suplementos},
-      {'pergunta': 'Frequência de Atividade Física', 'resposta': atividadeFreq},
-      {'pergunta': 'Duração da Atividade', 'resposta': duracao},
-      {'pergunta': 'Motivações', 'resposta': motivacoes.join(', ')},
-      {'pergunta': 'Impeditivos', 'resposta': impeditivos.join(', ')},
-      {'pergunta': 'Sono', 'resposta': sono},
-      {'pergunta': 'Tela Antes de Dormir', 'resposta': telaAntesDormir},
+        'pergunta': 'ultraprocessados',
+        'resposta': ultraprocessados ?? 'Não respondido',
+      },
+      {'pergunta': 'suplementos', 'resposta': suplementos ?? 'Não respondido'},
+      {
+        'pergunta': 'atividadeFreq',
+        'resposta': atividadeFreq ?? 'Não respondido',
+      },
+      {'pergunta': 'duracao', 'resposta': duracao ?? 'Não respondido'},
+      {'pergunta': 'motivacoes', 'resposta': motivacoes.join(', ')},
+      {'pergunta': 'impeditivos', 'resposta': impeditivos.join(', ')},
+      {'pergunta': 'sono', 'resposta': sono ?? 'Não respondido'},
+      {
+        'pergunta': 'telaAntesDormir',
+        'resposta': telaAntesDormir ?? 'Não respondido',
+      },
     ];
   }
 }
