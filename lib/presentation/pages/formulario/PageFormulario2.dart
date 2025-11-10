@@ -515,7 +515,15 @@ class _PageFormulario2State extends State<PageFormulario2> {
                       ),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          // Atualiza todos os campos no objeto
+                          // Cria uma cópia da lista para salvar
+                          List<String> motivacoesSalvas = List.from(motivacoes);
+
+                          // Adiciona o "Outro" se necessário
+                          if (motivacoes.contains('Outros (especificar)') &&
+                              outroMotivo.isNotEmpty) {
+                            motivacoesSalvas.add('Outro: $outroMotivo');
+                          }
+
                           widget.formularioData.estresse = estresse;
                           widget.formularioData.ansiedade = ansiedade;
                           widget.formularioData.sobrecarga = sobrecarga;
@@ -527,16 +535,11 @@ class _PageFormulario2State extends State<PageFormulario2> {
                           widget.formularioData.suplementos = suplementos;
                           widget.formularioData.atividadeFreq = atividadeFreq;
                           widget.formularioData.duracao = duracao;
-                          widget.formularioData.motivacoes = motivacoes;
                           widget.formularioData.impeditivos = impeditivos;
                           widget.formularioData.sono = sono;
                           widget.formularioData.telaAntesDormir =
                               telaAntesDormir;
-
-                          if (motivacoes.contains('Outros (especificar)') &&
-                              outroMotivo.isNotEmpty) {
-                            motivacoes.add('Outro: $outroMotivo');
-                          }
+                          widget.formularioData.motivacoes = motivacoesSalvas;
 
                           // Salva no Firebase
                           await saveFormToFirebase(widget.formularioData);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/presentation/pages/home/homePage.dart';
 import 'package:myapp/presentation/pages/perfil/perfilDrawer.dart';
 import 'package:myapp/presentation/widgets/custom_bottom_nav.dart';
 import 'package:myapp/theme/colors.dart';
@@ -44,8 +45,11 @@ class PageFormularioFinal extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    // volta pra Home
-                    Navigator.popUntil(context, (route) => route.isFirst);
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => const HomePage()),
+                      (route) => false,
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
