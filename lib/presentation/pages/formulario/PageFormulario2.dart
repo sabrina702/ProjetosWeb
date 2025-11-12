@@ -502,7 +502,6 @@ class _PageFormulario2State extends State<PageFormulario2> {
                   ),
                   const SizedBox(height: 30),
 
-                  // Botão Enviar
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -515,10 +514,8 @@ class _PageFormulario2State extends State<PageFormulario2> {
                       ),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          // Cria uma cópia da lista para salvar
                           List<String> motivacoesSalvas = List.from(motivacoes);
 
-                          // Adiciona o "Outro" se necessário
                           if (motivacoes.contains('Outros (especificar)') &&
                               outroMotivo.isNotEmpty) {
                             motivacoesSalvas.add('Outro: $outroMotivo');
@@ -541,10 +538,8 @@ class _PageFormulario2State extends State<PageFormulario2> {
                               telaAntesDormir;
                           widget.formularioData.motivacoes = motivacoesSalvas;
 
-                          // Salva no Firebase
                           await saveFormToFirebase(widget.formularioData);
 
-                          // Vai para página final
                           Navigator.push(
                             context,
                             MaterialPageRoute(
