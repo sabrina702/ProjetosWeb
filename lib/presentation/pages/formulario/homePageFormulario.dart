@@ -46,7 +46,7 @@ class Page2 extends StatelessWidget {
                 ),
                 const SizedBox(height: 48),
                 SizedBox(
-                  width: 220, // deixa o botão mais centralizado e bonito
+                  width: 220,
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(
