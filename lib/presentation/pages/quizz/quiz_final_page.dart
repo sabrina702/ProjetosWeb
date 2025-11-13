@@ -1,9 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/presentation/pages/perfil/perfilDrawer.dart';
 import 'package:myapp/presentation/pages/pokemonPage.dart';
 import 'package:myapp/presentation/widgets/custom_bottom_nav.dart';
+import 'package:myapp/service/database_service.dart';
 import 'package:myapp/theme/colors.dart';
 import 'package:myapp/theme/text_styles.dart';
 
@@ -32,29 +31,14 @@ class _QuizResultPageState extends State<QuizPageFinal> {
   }
 
   Future<void> _saveResult() async {
-    final user = FirebaseAuth.instance.currentUser;
-
-    if (user == null) {
-      setState(() {
-        _saving = false;
-        _error = "Usuário não está logado.";
-      });
-      return;
-    }
-
-    final quizResult = {
-      'score': widget.score,
-      'totalQuestions': 10,
-      'answers': widget.userAnswers,
-      'takenAt': FieldValue.serverTimestamp(),
-    };
-
     try {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .collection('QuizzResultado')
-          .add(quizResult);
+      final db = DatabaseService();
+
+      await db.salvarResultadoQuizz({
+        'score': widget.score,
+        'totalQuestions': 10,
+        'answers': widget.userAnswers,
+      });
 
       setState(() => _saving = false);
     } catch (e) {

@@ -33,6 +33,7 @@ class _PageFormulario1State extends State<PageFormulario1> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // Campo Nome
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -71,6 +72,7 @@ class _PageFormulario1State extends State<PageFormulario1> {
               ),
               const SizedBox(height: 20),
 
+              // Campo Idade
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -110,6 +112,7 @@ class _PageFormulario1State extends State<PageFormulario1> {
               ),
               const SizedBox(height: 30),
 
+              // Botão Próximo
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -139,9 +142,10 @@ class _PageFormulario1State extends State<PageFormulario1> {
                   child: Text(
                     'Próximo',
                     style: TextStyle(
-                      color: AppColors.background,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      color: AppColors
+                          .background, // supondo que você tenha AppColors.white
+                      fontWeight: FontWeight.bold, // opcional
+                      fontSize: 16, // opcional
                     ),
                   ),
                 ),
