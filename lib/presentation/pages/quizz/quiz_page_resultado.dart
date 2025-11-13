@@ -20,16 +20,18 @@ class QuizResultsPage extends StatelessWidget {
       );
     }
 
-    // Subcoleção onde os resultados do quiz do usuário estão salvos
+    // Subcoleção correta onde os resultados do quiz do usuário estão salvos
     final CollectionReference userQuizCollection = FirebaseFirestore.instance
         .collection('users')
         .doc(user.uid)
-        .collection('QuizzResultado');
+        .collection('quizzResultado');
 
     return Scaffold(
       appBar: AppBar(title: const Text('Resultados do Quiz')),
       body: StreamBuilder<QuerySnapshot>(
-        stream: userQuizCollection.snapshots(),
+        stream: userQuizCollection
+            .orderBy('data', descending: true)
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(
@@ -41,7 +43,7 @@ class QuizResultsPage extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final docs = snapshot.data!.docs;
+          final docs = snapshot.data?.docs ?? [];
 
           if (docs.isEmpty) {
             return const Center(child: Text('Nenhum resultado encontrado'));
@@ -54,22 +56,23 @@ class QuizResultsPage extends StatelessWidget {
               final doc = docs[index];
               final data = doc.data() as Map<String, dynamic>;
 
-              // Pegando os dados do quiz
+              // Dados do quiz
               final pontuacao = data['score'] ?? 0;
               final totalPerguntas = data['totalQuestions'] ?? 0;
               final respostas = data['answers'] as List<dynamic>? ?? [];
+
               final Timestamp? dataRespostaTimestamp =
-                  data['takenAt'] as Timestamp?;
+                  data['data'] as Timestamp?;
               final dataFormatada = dataRespostaTimestamp != null
                   ? DateFormat(
                       'dd/MM/yyyy HH:mm',
                     ).format(dataRespostaTimestamp.toDate())
                   : 'Data não disponível';
 
-              // Montando lista de widgets para exibir as respostas
+              // Widgets que serão exibidos no card
               final List<Widget> quizWidgets = [
                 Text(
-                  'Pontuação: $pontuacao / $totalPerguntas',
+                  'Acertos: $pontuacao de $totalPerguntas',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
@@ -109,8 +112,8 @@ class QuizResultsPage extends StatelessWidget {
           );
         },
       ),
-
       bottomNavigationBar: const CustomBottomNav(currentIndex: 0),
+      drawer: const PerfilDrawer(),
     );
   }
 }
