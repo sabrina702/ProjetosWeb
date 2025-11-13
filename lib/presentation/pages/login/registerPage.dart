@@ -14,20 +14,17 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
-  final _nomeController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  String? _tipoUsuario; // dropdown
   final _authService = AuthService();
 
   bool _loading = false;
 
-  Future<void> _register() async {
+  void _register() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _loading = true);
 
-      // Verifica se as senhas coincidem
       if (_passwordController.text != _confirmPasswordController.text) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -41,21 +38,11 @@ class _RegisterPageState extends State<RegisterPage> {
 
       try {
         final user = await _authService.register(
-          nome: _nomeController.text.trim(),
-          email: _emailController.text.trim(),
-          senha: _passwordController.text.trim(),
-          tipoUsuario: _tipoUsuario ?? 'Aluno', // padrão
+          _emailController.text.trim(),
+          _passwordController.text.trim(),
         );
 
         if (user != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Conta criada com sucesso!'),
-              backgroundColor: Colors.green,
-            ),
-          );
-
-          // Redireciona para a HomePage
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const HomePage()),
@@ -75,26 +62,10 @@ class _RegisterPageState extends State<RegisterPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(message), backgroundColor: Colors.redAccent),
         );
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Erro inesperado: $e'),
-            backgroundColor: Colors.redAccent,
-          ),
-        );
       } finally {
         setState(() => _loading = false);
       }
     }
-  }
-
-  @override
-  void dispose() {
-    _nomeController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
-    super.dispose();
   }
 
   @override
@@ -129,64 +100,20 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   const SizedBox(height: 32),
 
-                  // Nome
-                  TextFormField(
-                    controller: _nomeController,
-                    decoration: const InputDecoration(
-                      labelText: 'Nome completo',
-                      prefixIcon: Icon(Icons.person_outline),
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Digite seu nome';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-
                   // E-mail
                   TextFormField(
                     controller: _emailController,
                     decoration: const InputDecoration(
                       labelText: 'E-mail',
-                      prefixIcon: Icon(Icons.email_outlined),
+                      prefixIcon: Icon(Icons.person_outline),
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Digite seu e-mail';
-                      } else if (!value.contains('@')) {
-                        return 'Digite um e-mail válido';
                       }
                       return null;
                     },
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Tipo de usuário
-                  DropdownButtonFormField<String>(
-                    value: _tipoUsuario,
-                    items: const [
-                      DropdownMenuItem(value: 'Aluno', child: Text('Aluno')),
-                      DropdownMenuItem(
-                        value: 'Professor',
-                        child: Text('Professor'),
-                      ),
-                      DropdownMenuItem(
-                        value: 'Administrador',
-                        child: Text('Administrador'),
-                      ),
-                    ],
-                    onChanged: (value) => setState(() => _tipoUsuario = value),
-                    decoration: const InputDecoration(
-                      labelText: 'Tipo de Usuário',
-                      prefixIcon: Icon(Icons.account_circle_outlined),
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) =>
-                        value == null ? 'Selecione o tipo de usuário' : null,
                   ),
                   const SizedBox(height: 16),
 
@@ -215,7 +142,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     controller: _confirmPasswordController,
                     obscureText: true,
                     decoration: const InputDecoration(
-                      labelText: 'Confirmar senha',
+                      labelText: 'Confirmar Senha',
                       prefixIcon: Icon(Icons.lock_outline),
                       border: OutlineInputBorder(),
                     ),
@@ -247,7 +174,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
                   // Link para login
                   TextButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () {
+                      Navigator.pop(context); // volta para a tela de login
+                    },
                     child: const Text('Já tem conta? Faça login'),
                   ),
                 ],

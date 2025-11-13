@@ -1,77 +1,39 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:myapp/data/models/userModel.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Cadastro de novo usuário
-  Future<UserModel?> register({
-    required String nome,
-    required String email,
-    required String senha,
-    required String tipoUsuario,
-  }) async {
+  Future<User?> register(String email, String password) async {
     try {
       final userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
-        password: senha,
+        password: password,
       );
-      final user = userCredential.user;
-
-      if (user != null) {
-        final newUser = UserModel(
-          id: user.uid,
-          nome: nome,
-          email: email,
-          senha: senha,
-          tipoUsuario: tipoUsuario,
-        );
-
-        await _firestore.collection('users').doc(user.uid).set(newUser.toMap());
-        await user.updateDisplayName(nome);
-
-        return newUser;
-      }
-
-      return null;
+      return userCredential.user;
     } on FirebaseAuthException catch (e) {
+      // Propaga o erro para ser tratado na tela
       throw e;
     } catch (e) {
-      print('❌ Erro inesperado no cadastro: $e');
+      print('Erro inesperado no cadastro: $e');
       rethrow;
     }
   }
 
-  // 🔹 Login modificado — agora retorna também o nome e tipoUsuario
-  Future<UserModel?> login(String email, String senha) async {
+  // Login do usuário
+  Future<User?> login(String email, String password) async {
     try {
       final userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
-        password: senha,
+        password: password,
       );
-
-      final user = userCredential.user;
-      if (user == null) return null;
-
-      // 🔹 Busca as informações do usuário no Firestore
-      final doc = await _firestore.collection('users').doc(user.uid).get();
-
-      if (doc.exists) {
-        final data = doc.data()!;
-        return UserModel(
-          id: user.uid,
-          nome: data['nome'],
-          email: data['email'],
-          senha: data['senha'],
-          tipoUsuario: data['tipoUsuario'],
-        );
-      } else {
-        return null;
-      }
+      return userCredential.user;
     } on FirebaseAuthException catch (e) {
+      // Aqui é o principal: joga o erro pra fora
       throw e;
+    } catch (e) {
+      print('Erro inesperado no login: $e');
+      rethrow;
     }
   }
 
